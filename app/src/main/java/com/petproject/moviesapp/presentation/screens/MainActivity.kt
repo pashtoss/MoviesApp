@@ -8,8 +8,9 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        val rootFragment = RootFragment.newInstance()
         supportFragmentManager.beginTransaction()
-            .add(R.id.mainContainer, MovieListFragment())
+            .add(R.id.mainContainer, rootFragment)
             .commit()
     }
 }

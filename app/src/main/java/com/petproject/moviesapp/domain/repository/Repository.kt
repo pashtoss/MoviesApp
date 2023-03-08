@@ -12,11 +12,15 @@ interface Repository {
 
     suspend fun loadReviews(movieId: Int): List<Review>
 
-    suspend fun addToFavorites(movie: Movie)
+    suspend fun getSavedTrailers(movieId: Int): List<Trailer>
 
-    suspend fun removeFromFavorites(movieId: Int)
+    suspend fun getSavedReviews(movieId: Int): List<Review>
 
-    fun getFavoriteMovies(): LiveData<List<Movie>>
+    suspend fun saveMovie(movie: Movie, trailers: List<Trailer>, reviews: List<Review>)
 
-    fun existsFavoriteMovie(movieId: Int): LiveData<Boolean>
+    suspend fun removeMovie(movieId: Int)
+
+    fun getSavedMovies(): LiveData<List<Movie>>
+
+    fun existsSavedMovie(movieId: Int): LiveData<Boolean>
 }

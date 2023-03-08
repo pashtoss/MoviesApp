@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@color/gray"
     android:padding="4dp"
-    tools:context=".presentation.screens.MovieListFragment">
+    tools:context=".presentation.screens.MoviesFragment">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerViewMoviesList"
@@ -24,6 +24,22 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:visibility="visible" />
+
+    <TextView
+        android:id="@+id/textViewEmptyListMessage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:shadowColor="@color/white"
+        android:gravity="center"
+        android:visibility="visible"
+        android:textSize="24sp"
+        android:shadowRadius="3"
+        android:text="@string/empty_list_message"
+        android:textColor="@color/black"
+        app:layout_constraintBottom_toBottomOf="@+id/recyclerViewMoviesList"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

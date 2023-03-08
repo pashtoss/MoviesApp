@@ -5,12 +5,22 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.petproject.moviesapp.data.database.dao.MovieDao
+import com.petproject.moviesapp.data.database.dao.ReviewDao
+import com.petproject.moviesapp.data.database.dao.TrailerDao
 import com.petproject.moviesapp.data.database.model.MovieDbModel
+import com.petproject.moviesapp.data.database.model.ReviewDbModel
+import com.petproject.moviesapp.data.database.model.TrailerDbModel
 
-@Database(entities = [MovieDbModel::class], version = 1, exportSchema = false)
+@Database(
+    entities = [MovieDbModel::class, ReviewDbModel::class, TrailerDbModel::class],
+    version = 1,
+    exportSchema = false
+)
 abstract class AppDatabase : RoomDatabase() {
 
     abstract fun getMovieDao(): MovieDao
+    abstract fun getTrailerDao(): TrailerDao
+    abstract fun getReviewDao(): ReviewDao
 
     companion object {
         private const val DB_NAME = "favorite_movies.db"
@@ -28,7 +38,9 @@ abstract class AppDatabase : RoomDatabase() {
                     application,
                     AppDatabase::class.java,
                     DB_NAME
-                ).build()
+                )
+                    .fallbackToDestructiveMigration()
+                    .build()
                 instance = newInstance
                 return newInstance
             }

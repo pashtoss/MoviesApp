@@ -9,6 +9,6 @@
         android:id="@+id/mainContainer"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:layout="@layout/fragment_movie_list" />
+        tools:layout="@layout/fragment_root" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

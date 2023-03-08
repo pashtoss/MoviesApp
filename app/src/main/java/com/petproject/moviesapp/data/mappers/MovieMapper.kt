@@ -19,7 +19,7 @@ class MovieMapper {
         return movieResponseDto.movies.map { dtoToEntitySingle(it) }
     }
 
-    fun dbModelToEntitySingle(movieDbModel: MovieDbModel) = Movie(
+    private fun dbModelToEntitySingle(movieDbModel: MovieDbModel) = Movie(
         id = movieDbModel.id,
         name = movieDbModel.name,
         year = movieDbModel.year,

@@ -1,5 +1,6 @@
 package com.petproject.moviesapp.presentation.adapters.movie
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.TextView
@@ -11,7 +12,7 @@ import com.petproject.moviesapp.domain.entities.Movie
 
 class MovieAdapter(
     private val onItemClickListener: (Movie) -> Unit,
-    private val onScrollEndListener: () -> Unit
+    private val onScrollEndListener: () -> Unit = {}
 ) : ListAdapter<Movie, MovieViewHolder>(MovieDiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MovieViewHolder {
@@ -26,10 +27,11 @@ class MovieAdapter(
         setRatingBackground(holder.rating, movie.rating)
         Glide.with(holder.itemView.context)
             .load(movie.posterUrl)
+            .timeout(1500)
             .error(R.drawable.error_image_holder)
             .into(holder.imagePreview)
         holder.itemView.setOnClickListener { onItemClickListener(movie) }
-        if (position == currentList.lastIndex - 4) {
+        if (position >= currentList.lastIndex - 6) {
             onScrollEndListener()
         }
     }

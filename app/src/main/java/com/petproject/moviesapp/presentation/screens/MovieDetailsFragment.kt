@@ -10,9 +10,11 @@ import androidx.core.net.toUri
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.PagerSnapHelper
 import com.bumptech.glide.Glide
 import com.petproject.moviesapp.R
 import com.petproject.moviesapp.databinding.FragmentMovieDetailsBinding
+import com.petproject.moviesapp.domain.MovieDetailsMode
 import com.petproject.moviesapp.domain.entities.Movie
 import com.petproject.moviesapp.presentation.adapters.review.ReviewAdapter
 import com.petproject.moviesapp.presentation.adapters.trailer.TrailerAdapter
@@ -21,9 +23,10 @@ import com.petproject.moviesapp.presentation.viewmodels.MovieDetailsViewModelFac
 
 class MovieDetailsFragment : Fragment() {
     private lateinit var movie: Movie
+    private lateinit var mode: MovieDetailsMode
 
     private var _binding: FragmentMovieDetailsBinding? = null
-    private val binding get() = _binding ?: throw RuntimeException("binding is null")
+    private val binding get() = _binding ?: throw NullPointerException("binding is null")
 
     private val onTrailerClickListener: (String) -> Unit = { url ->
         val intent = Intent(Intent.ACTION_VIEW).apply { data = url.toUri() }
@@ -36,13 +39,13 @@ class MovieDetailsFragment : Fragment() {
     private val viewModel by lazy {
         ViewModelProvider(
             this,
-            MovieDetailsViewModelFactory(requireActivity().application, movie)
+            MovieDetailsViewModelFactory(requireActivity().application, movie, mode)
         )[MovieDetailsViewModel::class.java]
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        movie = parseArgs()
+        parseArgs()
     }
 
     override fun onCreateView(
@@ -90,6 +93,7 @@ class MovieDetailsFragment : Fragment() {
 
     private fun setUpReviewAdapter() {
         with(binding.recyclerViewReviews) {
+            PagerSnapHelper().attachToRecyclerView(this)
             adapter = reviewAdapter
             layoutManager = LinearLayoutManager(
                 requireContext(),
@@ -111,22 +115,35 @@ class MovieDetailsFragment : Fragment() {
         _binding = null
     }
 
-    private fun parseArgs(): Movie {
+    private fun parseArgs() {
         val args = requireArguments()
-        return if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) {
-            @Suppress("DEPRECATION") args.getParcelable<Movie>(MOVIE_KEY)
-        } else {
-            args.getParcelable(MOVIE_KEY, Movie::class.java)
-        } ?: throw RuntimeException("no argument Movie is given")
+        if (args.containsKey(MOVIE_KEY)) {
+            if (args.containsKey(MODE_KEY)) {
+                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) {
+                    @Suppress("DEPRECATION")
+                    movie = args.getParcelable(MOVIE_KEY)!!
+                    @Suppress("DEPRECATION")
+                    mode = args.getParcelable(MODE_KEY)!!
+                } else {
+                    movie = args.getParcelable(MOVIE_KEY, Movie::class.java)!!
+                    mode = args.getParcelable(MODE_KEY, MovieDetailsMode::class.java)!!
+                }
+                return
+            }
+            throw IllegalArgumentException("no 'movie' argument is given ")
+        }
+        throw IllegalArgumentException("no 'movie' argument is given ")
     }
 
     companion object {
-        fun newInstance(movie: Movie) = MovieDetailsFragment().apply {
+        fun newInstance(movie: Movie, mode: MovieDetailsMode) = MovieDetailsFragment().apply {
             arguments = Bundle().apply {
                 putParcelable(MOVIE_KEY, movie)
+                putParcelable(MODE_KEY, mode)
             }
         }
 
+        private const val MODE_KEY = "mode"
         private const val IMAGE_STAR_ON = android.R.drawable.star_big_on
         private const val IMAGE_STAR_OFF = android.R.drawable.star_big_off
         private const val MOVIE_KEY = "movie"

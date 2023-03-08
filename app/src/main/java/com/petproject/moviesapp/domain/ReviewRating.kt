@@ -1,5 +1,5 @@
 package com.petproject.moviesapp.domain
 
 enum class ReviewRating {
-    POSITIVE(), NEUTRAL, NEGATIVE
+    POSITIVE, NEUTRAL, NEGATIVE
 }

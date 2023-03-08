@@ -11,14 +11,14 @@ import com.petproject.moviesapp.data.database.model.MovieDbModel
 @Dao
 interface MovieDao {
     @Query("SELECT * FROM movies")
-    fun getFavoriteMovies(): LiveData<List<MovieDbModel>>
+    fun getMovies(): LiveData<List<MovieDbModel>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun addToFavorites(movieDbModel: MovieDbModel)
+    suspend fun addMovie(movieDbModel: MovieDbModel)
 
     @Query("DELETE FROM movies WHERE id = :movieId")
-    suspend fun removeFromFavorites(movieId: Int)
+    suspend fun removeMovie(movieId: Int)
 
     @Query("SELECT EXISTS(SELECT 1 FROM movies WHERE id = :movieId LIMIT 1)")
-    fun existsFavoriteMovie(movieId: Int): LiveData<Boolean>
+    fun existsMovie(movieId: Int): LiveData<Boolean>
 }

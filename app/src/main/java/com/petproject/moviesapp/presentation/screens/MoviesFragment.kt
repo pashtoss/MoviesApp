@@ -1,7 +1,6 @@
 package com.petproject.moviesapp.presentation.screens
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,16 +8,18 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import com.petproject.moviesapp.R
-import com.petproject.moviesapp.databinding.FragmentMovieListBinding
+import com.petproject.moviesapp.databinding.FragmentMoviesBinding
+import com.petproject.moviesapp.domain.MovieDetailsMode
 import com.petproject.moviesapp.domain.entities.Movie
 import com.petproject.moviesapp.presentation.adapters.movie.MovieAdapter
-import com.petproject.moviesapp.presentation.viewmodels.MovieListViewModel
+import com.petproject.moviesapp.presentation.adapters.movie.MovieOffsetDecoration
+import com.petproject.moviesapp.presentation.viewmodels.MoviesViewModel
 
-class MovieListFragment : Fragment() {
-    private var _binding: FragmentMovieListBinding? = null
+class MoviesFragment : Fragment() {
+    private var _binding: FragmentMoviesBinding? = null
     private val binding
-        get() = _binding ?: throw RuntimeException("binding is null")
-    private val viewModel by lazy { ViewModelProvider(this)[MovieListViewModel::class.java] }
+        get() = _binding ?: throw NullPointerException("binding is null")
+    private val viewModel by lazy { ViewModelProvider(this)[MoviesViewModel::class.java] }
 
     private val onItemClickListener: (Movie) -> Unit = {
         launchDetailsFragment(it)
@@ -32,7 +33,7 @@ class MovieListFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentMovieListBinding.inflate(inflater, container, false)
+        _binding = FragmentMoviesBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -43,8 +44,8 @@ class MovieListFragment : Fragment() {
     }
 
     private fun setUpObservers() {
-        viewModel.currentMovieList.observe(viewLifecycleOwner) {
-            movieAdapter.submitList(it)
+        viewModel.currentMovieList.observe(viewLifecycleOwner) { newList ->
+            movieAdapter.submitList(newList)
         }
         viewModel.isLoading.observe(viewLifecycleOwner) {
             binding.progressBarLoading.visibility = if (it) View.VISIBLE else View.GONE
@@ -53,7 +54,9 @@ class MovieListFragment : Fragment() {
 
     private fun setUpRecyclerView() {
         binding.recyclerViewMoviesList.adapter = movieAdapter
-        binding.recyclerViewMoviesList.layoutManager = GridLayoutManager(requireContext(), 2)
+        binding.recyclerViewMoviesList.layoutManager =
+            GridLayoutManager(requireContext(), 2)
+        binding.recyclerViewMoviesList.addItemDecoration(MovieOffsetDecoration(10))
     }
 
     override fun onDestroyView() {
@@ -62,11 +65,18 @@ class MovieListFragment : Fragment() {
     }
 
     private fun launchDetailsFragment(movie: Movie) {
-        val detailsFragment = MovieDetailsFragment.newInstance(movie)
+        val detailsFragment = MovieDetailsFragment.newInstance(
+            movie,
+            MovieDetailsMode.MODE_GENERAL
+        )
         requireActivity().supportFragmentManager
             .beginTransaction()
-            .replace(R.id.mainContainer, detailsFragment)
+            .add(R.id.mainContainer, detailsFragment)
             .addToBackStack(null)
             .commit()
+    }
+
+    companion object {
+        fun newInstance() = MoviesFragment()
     }
 }
