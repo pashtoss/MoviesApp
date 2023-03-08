@@ -12,7 +12,6 @@ import com.petproject.moviesapp.databinding.FragmentMoviesBinding
 import com.petproject.moviesapp.domain.MovieDetailsMode
 import com.petproject.moviesapp.domain.entities.Movie
 import com.petproject.moviesapp.presentation.adapters.movie.MovieAdapter
-import com.petproject.moviesapp.presentation.adapters.movie.MovieOffsetDecoration
 import com.petproject.moviesapp.presentation.viewmodels.MoviesViewModel
 
 class MoviesFragment : Fragment() {
@@ -56,7 +55,6 @@ class MoviesFragment : Fragment() {
         binding.recyclerViewMoviesList.adapter = movieAdapter
         binding.recyclerViewMoviesList.layoutManager =
             GridLayoutManager(requireContext(), 2)
-        binding.recyclerViewMoviesList.addItemDecoration(MovieOffsetDecoration(10))
     }
 
     override fun onDestroyView() {
