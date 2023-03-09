@@ -1,5 +1,6 @@
 package com.petproject.moviesapp.presentation.screens
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -11,8 +12,10 @@ import com.petproject.moviesapp.R
 import com.petproject.moviesapp.databinding.FragmentMoviesBinding
 import com.petproject.moviesapp.domain.MovieDetailsMode
 import com.petproject.moviesapp.domain.entities.Movie
+import com.petproject.moviesapp.presentation.adapters.movie.ItemMarginDecoration
 import com.petproject.moviesapp.presentation.adapters.movie.MovieAdapter
 import com.petproject.moviesapp.presentation.viewmodels.MoviesViewModel
+
 
 class MoviesFragment : Fragment() {
     private var _binding: FragmentMoviesBinding? = null
@@ -55,6 +58,11 @@ class MoviesFragment : Fragment() {
         binding.recyclerViewMoviesList.adapter = movieAdapter
         binding.recyclerViewMoviesList.layoutManager =
             GridLayoutManager(requireContext(), 2)
+        binding.recyclerViewMoviesList.addItemDecoration(
+            ItemMarginDecoration(
+                requireContext().dpToPx(ITEM_MARGIN)
+            )
+        )
     }
 
     override fun onDestroyView() {
@@ -73,8 +81,13 @@ class MoviesFragment : Fragment() {
             .addToBackStack(null)
             .commit()
     }
+    private fun Context.dpToPx(dp: Int): Int {
+        return (dp.toFloat() * this.resources.displayMetrics.density).toInt()
+    }
 
     companion object {
         fun newInstance() = MoviesFragment()
+    private const val ITEM_MARGIN = 3
     }
+
 }

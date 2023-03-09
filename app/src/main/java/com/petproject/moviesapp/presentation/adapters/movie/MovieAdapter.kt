@@ -31,7 +31,7 @@ class MovieAdapter(
             .error(R.drawable.error_image_holder)
             .into(holder.imagePreview)
         holder.itemView.setOnClickListener { onItemClickListener(movie) }
-        if (position >= currentList.lastIndex - 6) {
+        if (position == currentList.lastIndex - 6) {
             onScrollEndListener()
         }
     }

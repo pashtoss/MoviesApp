@@ -1,6 +1,7 @@
 package com.petproject.moviesapp.data.repository
 
 import android.app.Application
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import com.petproject.moviesapp.data.database.AppDatabase
@@ -27,8 +28,8 @@ class RepositoryImpl private constructor(application: Application) : Repository 
     private var page = 1
 
     override suspend fun loadMovies(): List<Movie> {
-        val response = apiService.getMovies(page)
-        page += 1
+        Log.d("AAAA", page.toString())
+        val response = apiService.getMovies(page++)
         return movieMapper.dtoToEntityList(response)
     }
 

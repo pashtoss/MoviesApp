@@ -9,7 +9,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 object ApiFactory {
 
     private const val BASE_URL = "https://api.kinopoisk.dev/v1/"
-    private const val TOKEN = "VQ6JH33-T1RMY1E-JN7S24Z-H9BBBJZ"
+    private const val TOKEN = "H8C06SH-XE44C3T-J2768JN-S1281PJ"
     private const val TOKEN_KEY = "X-API-KEY"
 
     private val loggingInterceptor =

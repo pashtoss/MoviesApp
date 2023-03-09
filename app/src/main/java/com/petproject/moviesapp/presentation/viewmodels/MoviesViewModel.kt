@@ -26,15 +26,17 @@ class MoviesViewModel(application: Application) : AndroidViewModel(application) 
     }
 
     fun loadMovies() {
-        if (isLoading.value == false) {
-            viewModelScope.launch(Dispatchers.IO) {
-                _isLoading.postValue(true)
-                movieList.addAll(getMoviesUseCase())
-                withContext(Dispatchers.Main) {
-                    _currentMovieList.value = movieList
-                }
-                _isLoading.postValue(false)
-            }
+        if (isLoading.value == true) {
+            return
         }
+        viewModelScope.launch(Dispatchers.IO) {
+            _isLoading.postValue(true)
+            movieList.addAll(getMoviesUseCase())
+            withContext(Dispatchers.Main) {
+                _currentMovieList.value = movieList
+            }
+            _isLoading.postValue(false)
+        }
+
     }
 }
